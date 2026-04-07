@@ -2,19 +2,20 @@
   <img src="assets/screenshot.png" alt="free-code" width="720" />
 </p>
 
-<h1 align="center">free-code</h1>
+<h1 align="center">free-code (with Aliyun Coding Plan)</h1>
 
 <p align="center">
-  <strong>The free build of Claude Code.</strong><br>
+  <strong>The free build of Claude Code, forked from paoloanzn/free-code.</strong><br>
+  This fork adds seamless support for Aliyun's Coding Plan API (DashScope OpenCode).<br>
   All telemetry stripped. All guardrails removed. All experimental features unlocked.<br>
   One binary, zero callbacks home.
 </p>
 
 <p align="center">
   <a href="#quick-install"><img src="https://img.shields.io/badge/install-one--liner-blue?style=flat-square" alt="Install" /></a>
-  <a href="https://github.com/paoloanzn/free-code/stargazers"><img src="https://img.shields.io/github/stars/paoloanzn/free-code?style=flat-square" alt="Stars" /></a>
-  <a href="https://github.com/paoloanzn/free-code/issues"><img src="https://img.shields.io/github/issues/paoloanzn/free-code?style=flat-square" alt="Issues" /></a>
-  <a href="https://github.com/paoloanzn/free-code/blob/main/FEATURES.md"><img src="https://img.shields.io/badge/features-88%20flags-orange?style=flat-square" alt="Feature Flags" /></a>
+  <a href="https://github.com/qsjustin/free-code/stargazers"><img src="https://img.shields.io/github/stars/qsjustin/free-code?style=flat-square" alt="Stars" /></a>
+  <a href="https://github.com/qsjustin/free-code/issues"><img src="https://img.shields.io/github/issues/qsjustin/free-code?style=flat-square" alt="Issues" /></a>
+  <a href="https://github.com/qsjustin/free-code/blob/main/FEATURES.md"><img src="https://img.shields.io/badge/features-88%20flags-orange?style=flat-square" alt="Feature Flags" /></a>
   <a href="#ipfs-mirror"><img src="https://img.shields.io/badge/IPFS-mirrored-teal?style=flat-square" alt="IPFS" /></a>
 </p>
 
@@ -23,7 +24,7 @@
 ## Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/paoloanzn/free-code/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/qsjustin/free-code/main/install.sh | bash
 ```
 
 Checks your system, installs Bun if needed, clones the repo, builds with all experimental features enabled, and symlinks `free-code` on your PATH.
@@ -77,7 +78,7 @@ Claude Code ships with 88 feature flags gated behind `bun:bundle` compile-time s
 
 ## Model Providers
 
-free-code supports **five API providers** out of the box. Set the corresponding environment variable to switch providers -- no code changes needed.
+free-code supports **six API providers** out of the box. Set the corresponding environment variable to switch providers -- no code changes needed.
 
 ### Anthropic (Direct API) -- Default
 
@@ -147,6 +148,18 @@ free-code
 
 Supports custom deployment IDs as model names.
 
+### Aliyun Model Studio (DashScope)
+
+Route requests through Alibaba Cloud's DashScope OpenCode compatible mode (Coding Plan API).
+
+```bash
+export CLAUDE_CODE_USE_ALIYUN=1
+export DASHSCOPE_API_KEY="..."
+free-code
+```
+
+Models are mapped to Aliyun format automatically (e.g., `claude-sonnet-4-6` -> `qwen3.5-plus`). This implementation integrates with Aliyun's DashScope `/responses` endpoint allowing for robust Tool capabilities on compatible models.
+
 ### Provider Selection Summary
 
 | Provider | Env Variable | Auth Method |
@@ -156,6 +169,7 @@ Supports custom deployment IDs as model names.
 | AWS Bedrock | `CLAUDE_CODE_USE_BEDROCK=1` | AWS credentials |
 | Google Vertex AI | `CLAUDE_CODE_USE_VERTEX=1` | `gcloud` ADC |
 | Anthropic Foundry | `CLAUDE_CODE_USE_FOUNDRY=1` | `ANTHROPIC_FOUNDRY_API_KEY` |
+| Aliyun DashScope | `CLAUDE_CODE_USE_ALIYUN=1` | `DASHSCOPE_API_KEY` |
 
 ---
 
@@ -175,7 +189,7 @@ curl -fsSL https://bun.sh/install | bash
 ## Build
 
 ```bash
-git clone https://github.com/paoloanzn/free-code.git
+git clone https://github.com/qsjustin/free-code.git
 cd free-code
 bun build
 ./cli

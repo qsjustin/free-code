@@ -36,6 +36,7 @@ import {
   isEnvTruthy,
 } from '../../utils/envUtils.js'
 import { createCodexFetch } from './codex-fetch-adapter.js'
+import { createAliyunFetch } from './aliyun-fetch-adapter.js'
 
 /**
  * Environment variables for different client types:
@@ -303,6 +304,22 @@ export async function getAnthropicClient({
     }
     // we have always been lying about the return type - this doesn't support batching or models
     return new AnthropicVertex(vertexArgs) as unknown as Anthropic
+  }
+
+  // ── Aliyun (DashScope) provider via fetch adapter ─────────────────
+  if (isEnvTruthy(process.env.CLAUDE_CODE_USE_ALIYUN)) {
+    const apiKey = process.env.DASHSCOPE_API_KEY
+    if (apiKey) {
+      const aliyunFetch = createAliyunFetch()
+      const clientConfig: ConstructorParameters<typeof Anthropic>[0] = {
+        apiKey: apiKey,
+        baseURL: 'https://coding.dashscope.aliyuncs.com/apps/anthropic/v1',
+        ...ARGS,
+        fetch: aliyunFetch as unknown as typeof globalThis.fetch,
+        ...(isDebugToStdErr() && { logger: createStderrLogger() }),
+      }
+      return new Anthropic(clientConfig)
+    }
   }
 
   // ── Codex (OpenAI) provider via fetch adapter ─────────────────────
