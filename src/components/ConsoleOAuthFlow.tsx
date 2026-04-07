@@ -437,7 +437,7 @@ function OAuthStatusMessage(t0) {
         let t6;
         if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
           t6 = [t4, t5, {
-            label: <Text>3rd-party platform ·{" "}<Text dimColor={true}>Amazon Bedrock, Microsoft Foundry, or Vertex AI</Text>{"\n"}</Text>,
+            label: <Text>3rd-party platform ·{" "}<Text dimColor={true}>Amazon Bedrock, Microsoft Foundry, Vertex AI, or Aliyun</Text>{"\n"}</Text>,
             value: "platform"
           }, {
             label: <Text>OpenAI Codex account ·{" "}<Text dimColor={true}>ChatGPT Plus/Pro subscription</Text>{"\n"}</Text>,
@@ -504,7 +504,7 @@ function OAuthStatusMessage(t0) {
         let t2;
         let t3;
         if ($[14] === Symbol.for("react.memo_cache_sentinel")) {
-          t2 = <Text>Claude Code supports Amazon Bedrock, Microsoft Foundry, and Vertex AI. Set the required environment variables, then restart Claude Code.</Text>;
+          t2 = <Text>Claude Code supports Amazon Bedrock, Microsoft Foundry, Vertex AI, and Aliyun DashScope. Set the required environment variables, then restart Claude Code.</Text>;
           t3 = <Text>If you are part of an enterprise organization, contact your administrator for setup instructions.</Text>;
           $[14] = t2;
           $[15] = t3;
@@ -535,7 +535,7 @@ function OAuthStatusMessage(t0) {
         }
         let t7;
         if ($[19] === Symbol.for("react.memo_cache_sentinel")) {
-          t7 = <Box flexDirection="column" marginTop={1}>{t4}{t5}{t6}<Text>· Vertex AI:{" "}<Link url="https://code.claude.com/docs/en/google-vertex-ai">https://code.claude.com/docs/en/google-vertex-ai</Link></Text></Box>;
+          t7 = <Box flexDirection="column" marginTop={1}>{t4}{t5}{t6}<Text>· Vertex AI:{" "}<Link url="https://code.claude.com/docs/en/google-vertex-ai">https://code.claude.com/docs/en/google-vertex-ai</Link></Text><Text>· Aliyun DashScope:{" "}<Link url="https://github.com/qsjustin/free-code">https://github.com/qsjustin/free-code</Link></Text></Box>;
           $[19] = t7;
         } else {
           t7 = $[19];
