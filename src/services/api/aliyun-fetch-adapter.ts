@@ -56,8 +56,21 @@ export function createAliyunFetch(): (input: RequestInfo | URL, init?: RequestIn
     anthropicBody.model = mapClaudeModelToAliyun(claudeModel)
 
     // Send the exact same Anthropic payload with modified model name
-    return globalThis.fetch(input, {
+    // Important: Use url, not input, because if input is a Request its body may be consumed.
+    // Also, we must extract headers if input is a Request to preserve them.
+    let headers: HeadersInit = init?.headers || {}
+    if (input instanceof Request) {
+      const reqHeaders: Record<string, string> = {}
+      input.headers.forEach((value, key) => {
+        reqHeaders[key] = value
+      })
+      headers = { ...reqHeaders, ...headers }
+    }
+
+    return globalThis.fetch(url, {
       ...init,
+      method: input instanceof Request ? input.method : (init?.method || 'POST'),
+      headers,
       body: JSON.stringify(anthropicBody),
     })
   }

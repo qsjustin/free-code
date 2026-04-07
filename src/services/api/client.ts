@@ -313,7 +313,7 @@ export async function getAnthropicClient({
       const aliyunFetch = createAliyunFetch()
       const clientConfig: ConstructorParameters<typeof Anthropic>[0] = {
         apiKey: apiKey,
-        baseURL: 'https://coding.dashscope.aliyuncs.com/apps/anthropic/v1',
+        baseURL: 'https://coding.dashscope.aliyuncs.com/apps/anthropic',
         ...ARGS,
         fetch: aliyunFetch as unknown as typeof globalThis.fetch,
         ...(isDebugToStdErr() && { logger: createStderrLogger() }),
