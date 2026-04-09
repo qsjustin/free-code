@@ -4,6 +4,8 @@ import { getGlobalConfig } from './config.js'
 import { isEnvTruthy } from './envUtils.js'
 import { getCanonicalName } from './model/model.js'
 import { getModelCapability } from './model/modelCapabilities.js'
+import { getAPIProvider } from './model/providers.js'
+import { mapClaudeModelToAliyun } from '../services/api/aliyun-fetch-adapter.js'
 
 // Model context window size (200k tokens for all models right now)
 export const MODEL_CONTEXT_WINDOW_DEFAULT = 200_000
@@ -52,6 +54,26 @@ export function getContextWindowForModel(
   model: string,
   betas?: string[],
 ): number {
+  if (getAPIProvider() === 'aliyun') {
+    const aliyunModel = mapClaudeModelToAliyun(model)
+    switch (aliyunModel) {
+      case 'qwen3.5-plus':
+      case 'qwen3-coder-plus':
+        return 1_000_000
+      case 'kimi-k2.5':
+      case 'qwen3-max-2026-01-23':
+      case 'qwen3-coder-next':
+        return 262_144
+      case 'glm-5':
+      case 'glm-4.7':
+        return 202_752
+      case 'MiniMax-M2.5':
+        return 196_608
+      default:
+        return MODEL_CONTEXT_WINDOW_DEFAULT
+    }
+  }
+
   // Allow override via environment variable (ant-only)
   // This takes precedence over all other context window resolution, including 1M detection,
   // so users can cap the effective context window for local decisions (auto-compact, etc.)
@@ -152,6 +174,26 @@ export function getModelMaxOutputTokens(model: string): {
 } {
   let defaultTokens: number
   let upperLimit: number
+
+  if (getAPIProvider() === 'aliyun') {
+    const aliyunModel = mapClaudeModelToAliyun(model)
+    switch (aliyunModel) {
+      case 'qwen3.5-plus':
+      case 'qwen3-coder-next':
+      case 'qwen3-coder-plus':
+        return { default: 32_000, upperLimit: 65_536 }
+      case 'kimi-k2.5':
+      case 'qwen3-max-2026-01-23':
+        return { default: 32_000, upperLimit: 32_768 }
+      case 'MiniMax-M2.5':
+        return { default: 24_576, upperLimit: 24_576 }
+      case 'glm-5':
+      case 'glm-4.7':
+        return { default: 16_384, upperLimit: 16_384 }
+      default:
+        return { default: MAX_OUTPUT_TOKENS_DEFAULT, upperLimit: MAX_OUTPUT_TOKENS_UPPER_LIMIT }
+    }
+  }
 
   if (process.env.USER_TYPE === 'ant') {
     const antModel = resolveAntModel(model.toLowerCase())
