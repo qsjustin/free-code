@@ -160,6 +160,11 @@ free-code
 
 Models are mapped to Aliyun format automatically (e.g., `claude-sonnet-4-6` -> `qwen3.5-plus`). This implementation integrates with Aliyun's DashScope `/responses` endpoint allowing for robust Tool capabilities on compatible models.
 
+You can override the default model mappings by setting the following environment variables:
+* `ALIYUN_DEFAULT_OPUS_MODEL` (defaults to `glm-5`)
+* `ALIYUN_DEFAULT_SONNET_MODEL` (defaults to `qwen3.5-plus`)
+* `ALIYUN_DEFAULT_HAIKU_MODEL` (defaults to `MiniMax-M2.5`)
+
 ### Provider Selection Summary
 
 | Provider | Env Variable | Auth Method |

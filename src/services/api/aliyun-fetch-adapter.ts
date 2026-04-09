@@ -17,16 +17,34 @@ export const ALIYUN_MODELS = [
   { id: 'glm-4.7', label: 'GLM-4.7', description: 'GLM-4.7' },
 ] as const
 
-export const DEFAULT_ALIYUN_MODEL = 'qwen3.5-plus'
+export function getAliyunDefaultOpusModel(): string {
+  return process.env.ALIYUN_DEFAULT_OPUS_MODEL || 'glm-5'
+}
+
+export function getAliyunDefaultSonnetModel(): string {
+  return process.env.ALIYUN_DEFAULT_SONNET_MODEL || 'qwen3.5-plus'
+}
+
+export function getAliyunDefaultHaikuModel(): string {
+  return process.env.ALIYUN_DEFAULT_HAIKU_MODEL || 'MiniMax-M2.5'
+}
 
 export function mapClaudeModelToAliyun(claudeModel: string | null): string {
-  if (!claudeModel) return DEFAULT_ALIYUN_MODEL
+  if (!claudeModel) return getAliyunDefaultSonnetModel()
   if (ALIYUN_MODELS.some(m => m.id === claudeModel)) return claudeModel
+  
+  // Also pass through if it matches any custom configured default
+  if (claudeModel === getAliyunDefaultOpusModel() || 
+      claudeModel === getAliyunDefaultSonnetModel() || 
+      claudeModel === getAliyunDefaultHaikuModel()) {
+    return claudeModel
+  }
+
   const lower = claudeModel.toLowerCase()
-  if (lower.includes('opus')) return 'glm-5'
-  if (lower.includes('haiku')) return 'MiniMax-M2.5'
-  if (lower.includes('sonnet')) return 'qwen3.5-plus'
-  return DEFAULT_ALIYUN_MODEL
+  if (lower.includes('opus')) return getAliyunDefaultOpusModel()
+  if (lower.includes('haiku')) return getAliyunDefaultHaikuModel()
+  if (lower.includes('sonnet')) return getAliyunDefaultSonnetModel()
+  return getAliyunDefaultSonnetModel()
 }
 
 export function createAliyunFetch(): (input: RequestInfo | URL, init?: RequestInit) => Promise<Response> {

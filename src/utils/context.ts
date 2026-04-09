@@ -5,7 +5,12 @@ import { isEnvTruthy } from './envUtils.js'
 import { getCanonicalName } from './model/model.js'
 import { getModelCapability } from './model/modelCapabilities.js'
 import { getAPIProvider } from './model/providers.js'
-import { mapClaudeModelToAliyun } from '../services/api/aliyun-fetch-adapter.js'
+import {
+  getAliyunDefaultHaikuModel,
+  getAliyunDefaultOpusModel,
+  getAliyunDefaultSonnetModel,
+  mapClaudeModelToAliyun,
+} from '../services/api/aliyun-fetch-adapter.js'
 
 // Model context window size (200k tokens for all models right now)
 export const MODEL_CONTEXT_WINDOW_DEFAULT = 200_000
@@ -70,6 +75,9 @@ export function getContextWindowForModel(
       case 'MiniMax-M2.5':
         return 196_608
       default:
+        if (aliyunModel === getAliyunDefaultSonnetModel()) return 1_000_000
+        if (aliyunModel === getAliyunDefaultOpusModel()) return 202_752
+        if (aliyunModel === getAliyunDefaultHaikuModel()) return 196_608
         return MODEL_CONTEXT_WINDOW_DEFAULT
     }
   }
@@ -191,6 +199,9 @@ export function getModelMaxOutputTokens(model: string): {
       case 'glm-4.7':
         return { default: 16_384, upperLimit: 16_384 }
       default:
+        if (aliyunModel === getAliyunDefaultSonnetModel()) return { default: 32_000, upperLimit: 65_536 }
+        if (aliyunModel === getAliyunDefaultOpusModel()) return { default: 16_384, upperLimit: 16_384 }
+        if (aliyunModel === getAliyunDefaultHaikuModel()) return { default: 24_576, upperLimit: 24_576 }
         return { default: MAX_OUTPUT_TOKENS_DEFAULT, upperLimit: MAX_OUTPUT_TOKENS_UPPER_LIMIT }
     }
   }
